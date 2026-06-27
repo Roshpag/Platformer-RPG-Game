@@ -29,7 +29,7 @@ public class CameraController : MonoBehaviour
     {
         if (target == null) return;
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(1))
         {
             angle += Input.GetAxis("Mouse X") * rotateSpeed * Time.deltaTime;
         }
