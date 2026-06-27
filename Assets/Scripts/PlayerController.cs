@@ -74,7 +74,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             anim.SetTrigger("Jump");
-            rb.AddForce(Vector3.up * force,ForceMode.Impulse);
 
             if(Input.GetKey(KeyCode.LeftShift))
             {
@@ -101,6 +100,6 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Vector3 move = (camRight * horizontal + camForward * vertical).normalized;
-        rb.AddForce(move, ForceMode.VelocityChange);
+        rb.AddForce(move * speed, ForceMode.VelocityChange);
     }
 }
