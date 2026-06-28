@@ -84,6 +84,7 @@ public class EnemyScript : MonoBehaviour
             if (damageCollider.collider.name == "Player")
             {
                 Debug.Log("Damage!");
+                //damageCollider.collider.gameObject.GetComponent<PlayerController>().TakeDamage();
             }
         }
     }
@@ -99,7 +100,7 @@ public class EnemyScript : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, attackRange))
         {
-            Debug.DrawRay(transform.position, transform.forward* attackRange, Color.red);
+            Debug.DrawRay(transform.position, transform.forward * attackRange, Color.red);
             if(hit.collider.name == "Player")
             {
                 Hitting();
@@ -120,5 +121,9 @@ public class EnemyScript : MonoBehaviour
         {
             isNear = false;
         }
+    }
+    public void TakeDamage()
+    {
+        hp -= 20;
     }
 }
