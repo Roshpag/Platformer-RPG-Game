@@ -4,7 +4,8 @@ public class PlayerController : MonoBehaviour
 {
     private float horizontal;
     private float vertical;
-    private float speed = 7;
+    public float speed = 7;
+    public float runSpeed = 11;
     public float force = 5;
     private Rigidbody rb;
     private Animator anim;
@@ -12,13 +13,13 @@ public class PlayerController : MonoBehaviour
     public Vector3 camForward = Vector3.forward;
     public Vector3 camRight = Vector3.right;
     private bool isRunning = false;
+    private bool isGrounded = true;
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (cameraTransform != null)
@@ -71,9 +72,14 @@ public class PlayerController : MonoBehaviour
         {
             anim.SetInteger("Move", 0);
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             anim.SetTrigger("Jump");
+
+            Vector3 v = rb.linearVelocity;
+            v.y = force;
+            rb.linearVelocity = v;
+            isGrounded = false;
 
             if(Input.GetKey(KeyCode.LeftShift))
             {
@@ -100,6 +106,20 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Vector3 move = (camRight * horizontal + camForward * vertical).normalized;
-        rb.AddForce(move * speed, ForceMode.VelocityChange);
+        Vector3 velocity = move * (isRunning ? runSpeed : speed);
+        velocity.y = rb.linearVelocity.y; 
+        rb.linearVelocity = velocity;
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        foreach (ContactPoint contact in collision.contacts)
+        {
+            if (contact.normal.y > 0.5f)
+            {
+                isGrounded = true;
+                break;
+            }
+        }
     }
 }
