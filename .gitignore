@@ -104,3 +104,12 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# MCP / Claude Code tooling
+.mcp.json
+.claude/
+
+# Unity MCP plugin (com.ivanmurzak.unity.mcp / ai-game-developer) — generated NuGet dependencies
+/[Aa]ssets/Plugins/NuGet/
+/[Aa]ssets/Plugins/NuGet.meta
+/[Aa]ssets/Plugins.meta
