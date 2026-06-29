@@ -6,12 +6,12 @@ using Unity.VisualScripting;
 
 public class EnemyScript : MonoBehaviour
 {
-    protected float hp = 100;
+    private float hp = 100;
     protected float speed = 5f;
     protected float force = 2f;
     protected float seeRange = 20f;
-    public float jumpRange = 1.6f;
-    public float attackRange = 2f;
+    private float jumpRange = 0.5f;
+    private float attackRange = 1.2f;
     protected GameObject player;
     protected bool isSeeing = false;
     protected Animator anim;
@@ -20,9 +20,10 @@ public class EnemyScript : MonoBehaviour
     private bool isHitted;
     private bool isNear;
     public bool isDead = false;
+
     void Start()
     {
-        player = GameObject.Find("Player");
+        player = GameObject.FindGameObjectWithTag("Player");
         anim = gameObject.GetComponent<Animator>();
         rb = gameObject.GetComponent<Rigidbody>();
     }
@@ -57,7 +58,6 @@ public class EnemyScript : MonoBehaviour
 
     public  void isItSaw()
     {
-        transform.LookAt(player.transform.position);
         if (Physics.OverlapSphere(transform.position, seeRange).Contains(player.GetComponent<BoxCollider>()))
         {
             isSeeing = true;
@@ -78,19 +78,11 @@ public class EnemyScript : MonoBehaviour
     {
         anim.SetTrigger("Attack");
         anim.SetFloat("AttackVersion", 0);
-        RaycastHit damageCollider;
-        if(Physics.BoxCast(transform.position,new Vector3(1f,0.5f,2.5f),transform.forward * attackRange,out damageCollider))
-        {
-            if (damageCollider.collider.name == "Player")
-            {
-                Debug.Log("Damage!");
-                //damageCollider.collider.gameObject.GetComponent<PlayerController>().TakeDamage();
-            }
-        }
     }
 
     public virtual void Chasing()
     {
+        transform.LookAt(player.transform.position);
         if (canWalk && !isNear)
         {
             gameObject.transform.position = Vector3.MoveTowards(transform.position, new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z), speed * Time.deltaTime);
@@ -101,7 +93,7 @@ public class EnemyScript : MonoBehaviour
         if (Physics.Raycast(ray, out hit, attackRange))
         {
             Debug.DrawRay(transform.position, transform.forward * attackRange, Color.red);
-            if(hit.collider.name == "Player")
+            if(hit.collider.name == "EnemyStopRadius")
             {
                 Hitting();
             }
@@ -110,14 +102,22 @@ public class EnemyScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("EnemyStopRadius"))
         {
             isNear = true;
+        }
+        if (other.gameObject.CompareTag("Player"))
+        {
+            other.gameObject.GetComponent<PlayerController>().TakeDamage();
+        }
+        if (other.gameObject.CompareTag("Weapon"))
+        {
+            TakeDamage();
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("EnemyStopRadius"))
         {
             isNear = false;
         }
@@ -125,5 +125,6 @@ public class EnemyScript : MonoBehaviour
     public void TakeDamage()
     {
         hp -= 20;
+        anim.SetTrigger("Hurt");
     }
 }

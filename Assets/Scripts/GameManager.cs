@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     public GameObject menu;
     private CursorLockMode cursorBefore;
     private bool isVisibleCursor;
+    public static int playerSkin = 0;
+    public bool isGameLevel = true;
     private void Awake()
     {
         isPaused = false;
@@ -18,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if(Input.GetKeyDown(KeyCode.Escape) && isGameLevel)
         {
             if(isPaused)
             {
@@ -76,5 +78,31 @@ public class GameManager : MonoBehaviour
         transitionAnim.SetTrigger("Transition");
         yield return new WaitForSeconds(sec);
         SceneManager.LoadScene(scene);
+    }
+
+    public void ChangeSkin()
+    {
+        if(playerSkin == 0)
+        {
+            playerSkin = 1;
+        }
+        else if(playerSkin == 1)
+        {
+            playerSkin = 0;
+        }
+    }
+
+    public void MainMenu()
+    {
+        StartCoroutine(Transition(1f, 0));
+    }
+
+    public void LevelSelect()
+    {
+        StartCoroutine(Transition(1f, 1));
+    }
+    public void LVL1()
+    {
+        StartCoroutine(Transition(1f, 2));
     }
 }

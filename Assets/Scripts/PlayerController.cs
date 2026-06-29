@@ -9,24 +9,27 @@ public class PlayerController : MonoBehaviour
 {
     private float horizontal;
     private float vertical;
-    public float speed = 7;
-    public float runSpeed = 11;
+    public float speed = 5;
+    public float runSpeed = 8;
     public float force = 5;
     private Rigidbody rb;
     private Animator anim;
-    public Transform cameraTransform;
+    private Transform cameraTransform;
     public Vector3 camForward = Vector3.forward;
     public Vector3 camRight = Vector3.right;
     private bool isRunning = false;
     private bool isGrounded = true;
-    private int hp = 3;
-    public List<Image> hpImagesOn;
-    private List<Image> hpImagesOff;
-    public Slider staminaSlider;
+    private int hp = 100;
+    private Slider hpSlider;
+    private Slider staminaSlider;
     private int stamina = 100;
     private bool canRun = true;
+    private GameObject gameManager;
     void Start()
     {
+        cameraTransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        hpSlider = GameObject.FindGameObjectWithTag("HPSlider").GetComponent<Slider>();
+        staminaSlider = GameObject.FindGameObjectWithTag("StaminaSlider").GetComponent<Slider>();
         rb = gameObject.GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         /*GameObject[] hpObj = GameObject.FindGameObjectsWithTag("HeartHP");
@@ -34,6 +37,7 @@ public class PlayerController : MonoBehaviour
         {
             hpImagesOn.Add(hpObj[i].GetComponent<Image>());
         }*/
+        gameManager = GameObject.Find("GameManager");
     }
 
     void Update()
@@ -48,6 +52,9 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 move = (camRight * horizontal + camForward * vertical).normalized;
         rb.AddForce(move * speed, ForceMode.VelocityChange);
+        Vector3 velocity = move * (isRunning ? runSpeed : speed);
+        velocity.y = rb.linearVelocity.y;
+        rb.linearVelocity = velocity;
     }
 
     public void Move()
@@ -103,6 +110,8 @@ public class PlayerController : MonoBehaviour
             anim.SetInteger("Move", 0);
         }
     }
+    public void Jump()
+    {
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             anim.SetTrigger("Jump");
@@ -112,7 +121,7 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity = v;
             isGrounded = false;
 
-            if(Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift))
             {
                 anim.SetFloat("JumpVersion", 1);
             }
@@ -160,21 +169,13 @@ public class PlayerController : MonoBehaviour
     }
     public void HP()
     {
-        if(hp > hpImagesOn.Count)
+        if(hp <= 0)
         {
-            while(hp > hpImagesOn.Count)
-            {
-                hpImagesOn.Add(hpImagesOff[^1]);
-                hpImagesOff.Remove(hpImagesOff[^1]);
-                hpImagesOn[^1].color = new Color(hpImagesOn[^1].color.r, hpImagesOn[^1].color.g, hpImagesOn[^1].color.b, 1f);
-            }
+            hp = 0;
+            anim.SetTrigger("Dead");
+            gameManager.GetComponent<GameManager>().Restart();
         }
-        if(hp <  hpImagesOn.Count)
-        {
-            hpImagesOff.Add(hpImagesOn[^1]);
-            hpImagesOn.Remove(hpImagesOn[^1]);
-            hpImagesOff[^1].color = new Color(hpImagesOff[^1].color.r, hpImagesOff[^1].color.g, hpImagesOff[^1].color.b, 0.5f);
-        }
+        hpSlider.value = hp;
     }
     IEnumerator StaminaReCharge()
     {
@@ -202,15 +203,15 @@ public class PlayerController : MonoBehaviour
     }
     public void TakeDamage()
     {
-        hp -= 1;
+        if(hp > 10)
+        {
+            anim.SetTrigger("Hurt");
+        }
+        hp -= 10;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (Input.GetMouseButton(0) && other.gameObject.CompareTag("Enemy"))
-        {
-            other.gameObject.GetComponent<EnemyScript>().TakeDamage();
-        }
         Vector3 move = (camRight * horizontal + camForward * vertical).normalized;
         Vector3 velocity = move * (isRunning ? runSpeed : speed);
         velocity.y = rb.linearVelocity.y;
