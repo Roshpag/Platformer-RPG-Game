@@ -12,6 +12,7 @@ TagManager:
   - CinemachineTarget
   - HPSlider
   - StaminaSlider
+  - Lock
   layers:
   - Default
   - TransparentFX

@@ -2621,14 +2621,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a29eed9aebe4ef4469cbf6b44ef7ef38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  speed: 7
-  runSpeed: 11
   force: 5
-  cameraTransform: {fileID: 0}
   camForward: {x: 0, y: 0, z: 1}
   camRight: {x: 1, y: 0, z: 0}
-  hpSlider: {fileID: 0}
-  staminaSlider: {fileID: 0}
 --- !u!54 &3946468507961526029
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2637,7 +2632,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8450110462815742720}
   serializedVersion: 5
-  m_Mass: 1
+  m_Mass: 50
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -8,6 +9,7 @@ public class CameraController : MonoBehaviour
     public float mouseWheel;
     public float rotateSpeed = 120f;
     public float angle;
+    public float upRange = 1f;
     void Start()
     {
 
@@ -33,8 +35,21 @@ public class CameraController : MonoBehaviour
         {
             angle += Input.GetAxis("Mouse X") * rotateSpeed * Time.deltaTime;
         }
-        Vector3 offset = Quaternion.Euler(0f, angle, 0f) * new Vector3(0f, height, -distance);
-        transform.position = target.position + offset;
-        transform.LookAt(target.position);
+        Ray ray = new Ray(transform.position, -transform.up);
+        RaycastHit hit;
+        if (Physics.Raycast(ray,out hit,upRange))
+        {
+            float upCount = hit.distance;
+            Vector3 offset = Quaternion.Euler(0f, angle, 0f) * new Vector3(0f, height+upCount-1, -distance);
+            transform.position = target.position + offset;
+            transform.LookAt(target.position);
+        }
+        else
+        {
+            Vector3 offset = Quaternion.Euler(0f, angle, 0f) * new Vector3(0f, height, -distance);
+            transform.position = target.position + offset;
+            transform.LookAt(target.position);
+        }
+        
     }
 }

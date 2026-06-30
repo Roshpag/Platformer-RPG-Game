@@ -9,8 +9,8 @@ public class PlayerController : MonoBehaviour
 {
     private float horizontal;
     private float vertical;
-    public float speed = 5;
-    public float runSpeed = 8;
+    private float speed = 3;
+    private float runSpeed = 5;
     public float force = 5;
     private Rigidbody rb;
     private Animator anim;
@@ -115,12 +115,10 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             anim.SetTrigger("Jump");
-
+            isGrounded = false;
             Vector3 v = rb.linearVelocity;
             v.y = force;
             rb.linearVelocity = v;
-            isGrounded = false;
-
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 anim.SetFloat("JumpVersion", 1);

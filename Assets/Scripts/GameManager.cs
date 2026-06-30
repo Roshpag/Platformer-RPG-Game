@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     private bool isVisibleCursor;
     public static int playerSkin = 0;
     public bool isGameLevel = true;
+    public static bool[] unlockLevels = new[] { true, false, false, false, false, false, false, false, false, false };
     private void Awake()
     {
         isPaused = false;
