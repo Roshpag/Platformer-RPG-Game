@@ -10,9 +10,13 @@ public class CameraController : MonoBehaviour
     public float rotateSpeed = 120f;
     public float angle;
     public float upRange = 1f;
+    public LayerMask collisionMask = ~0;
+    public float collisionBuffer = 0.3f;
+    public float returnSpeed = 10f;
+    private float currentDistance;
     void Start()
     {
-
+        currentDistance = distance;
     }
     private void Update()
     {
@@ -35,21 +39,27 @@ public class CameraController : MonoBehaviour
         {
             angle += Input.GetAxis("Mouse X") * rotateSpeed * Time.deltaTime;
         }
-        Ray ray = new Ray(transform.position, -transform.up);
+
+        Vector3 pivot = target.position + Vector3.up * height;
+        Vector3 dir = Quaternion.Euler(0f, angle, 0f) * new Vector3(0f, 0f, -1f);
+
+        float desiredDistance = distance;
+
         RaycastHit hit;
-        if (Physics.Raycast(ray,out hit,upRange))
+        if (Physics.Raycast(pivot, dir, out hit, distance, collisionMask, QueryTriggerInteraction.Ignore))
         {
-            float upCount = hit.distance;
-            Vector3 offset = Quaternion.Euler(0f, angle, 0f) * new Vector3(0f, height+upCount-1, -distance);
-            transform.position = target.position + offset;
-            transform.LookAt(target.position);
+            desiredDistance = hit.distance - collisionBuffer;
         }
-        else
-        {
-            Vector3 offset = Quaternion.Euler(0f, angle, 0f) * new Vector3(0f, height, -distance);
-            transform.position = target.position + offset;
-            transform.LookAt(target.position);
-        }
+
         
+        if (desiredDistance < currentDistance)
+            currentDistance = desiredDistance;
+        else
+            currentDistance = Mathf.Lerp(currentDistance, desiredDistance, returnSpeed * Time.deltaTime);
+
+        currentDistance = Mathf.Max(currentDistance, 0.1f);
+
+        transform.position = pivot + dir * currentDistance;
+        transform.LookAt(pivot);
     }
 }
