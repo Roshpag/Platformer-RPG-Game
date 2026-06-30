@@ -5509,7 +5509,7 @@ MonoBehaviour:
       - gameObject: {fileID: 0}
       - gameObject: {fileID: 0}
       selectedSlot: 0
-      selected: 0
+      selected: 1
       colorTag: 0
       customPreviewImage: {fileID: 0}
     - name: Grass_01
@@ -6139,7 +6139,7 @@ MonoBehaviour:
       - gameObject: {fileID: 0}
       - gameObject: {fileID: 0}
       selectedSlot: 0
-      selected: 1
+      selected: 0
       colorTag: 0
       customPreviewImage: {fileID: 0}
     - name: Mushroom_01
@@ -8664,7 +8664,7 @@ MonoBehaviour:
       customPreviewImage: {fileID: 0}
     - name: Tree_01
       settings:
-        brushRadius: 15.9
+        brushRadius: 20
         brushSpacing: 5
         brushOverlapCheckMode: 0
         brushOverlapDistance: 0.5
@@ -8979,7 +8979,7 @@ MonoBehaviour:
       customPreviewImage: {fileID: 0}
     - name: Tree_02
       settings:
-        brushRadius: 8.2
+        brushRadius: 20
         brushSpacing: 5
         brushOverlapCheckMode: 0
         brushOverlapDistance: 0.5
@@ -9294,7 +9294,7 @@ MonoBehaviour:
       customPreviewImage: {fileID: 0}
     - name: Tree_03
       settings:
-        brushRadius: 16.6
+        brushRadius: 20
         brushSpacing: 5
         brushOverlapCheckMode: 0
         brushOverlapDistance: 0.5
@@ -9609,7 +9609,7 @@ MonoBehaviour:
       customPreviewImage: {fileID: 0}
     - name: Tree_04
       settings:
-        brushRadius: 16.5
+        brushRadius: 20
         brushSpacing: 5
         brushOverlapCheckMode: 0
         brushOverlapDistance: 0.5
@@ -9924,7 +9924,7 @@ MonoBehaviour:
       customPreviewImage: {fileID: 0}
     - name: Tree_05
       settings:
-        brushRadius: 16.1
+        brushRadius: 20
         brushSpacing: 5
         brushOverlapCheckMode: 0
         brushOverlapDistance: 0.5
